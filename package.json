@@ -1,0 +1,13 @@
+{
+  "name": "ripplemap",
+  "version": "1.0.0",
+  "description": "RippleMap - Dependency Radar & Cascade Failure Analysis Engine",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo 'Static build ready'"
+  },
+  "keywords": ["graph", "adsa", "dbms", "cascade-simulation", "radar"],
+  "author": "tanmay4568hll-design",
+  "license": "MIT"
+}
