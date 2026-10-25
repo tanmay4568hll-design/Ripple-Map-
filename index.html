@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RippleMap - Interactive Graph Dependency Radar & Cascade Failure Analysis Engine for ADSA and DBMS">
+    <title>RippleMap — Dependency Radar & Cascade Failure Analysis Engine</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- ====================================================================
+             HEADER HUD
+             ==================================================================== -->
+        <header class="header-hud">
+            <div class="brand-section">
+                <div class="radar-logo" title="RippleMap Dependency Radar"></div>
+                <div class="brand-title-wrap">
+                    <h1>RippleMap <span class="brand-badge">ADSA & DBMS Radar</span></h1>
+                </div>
+            </div>
+
+            <div class="header-center-controls">
+                <!-- Scenario Selector Dropdown -->
+                <div class="scenario-select-wrapper">
+                    <select id="scenarioSelect" class="scenario-dropdown" title="Select Dependency Scenario">
+                        <option value="1">🌐 1. Global Electronics Supply Chain (25 nodes)</option>
+                        <option value="2">☁️ 2. Cloud Microservices Architecture (24 nodes)</option>
+                        <option value="3">⚡ 3. Metropolitan City Infrastructure (23 nodes)</option>
+                        <option value="4">📢 4. Viral Social & Media Cascade (22 nodes)</option>
+                    </select>
+                    <span class="dropdown-arrow">▼</span>
+                </div>
+
+                <!-- Primary Action Buttons -->
+                <button id="btnTriggerCascade" class="btn-hud btn-trigger-cascade" title="Execute cascade shockwave simulation">
+                    <span>💥</span> Trigger Cascade
+                </button>
+                <button id="btnRunMitigation" class="btn-hud btn-mitigate" title="Run Greedy Mitigation Advisor">
+                    <span>🛡️</span> Advisor Shield
+                </button>
+                <button id="btnResetSimulation" class="btn-hud" title="Reset all simulations and clear blast radius">
+                    <span>🔄</span> Reset
+                </button>
+            </div>
+
+            <div class="header-right-tools">
+                <!-- User Role Switcher (Admin / Analyst) -->
+                <div id="roleToggle" class="role-badge-toggle role-admin" title="Click to switch role between Admin and Analyst">
+                    <span id="roleIcon">🔑</span> <span id="roleText">ADMIN</span>
+                </div>
+
+                <!-- Sound Mute/Unmute Toggle -->
+                <button id="btnToggleSound" class="icon-btn" title="Toggle Sound Feedback">
+                    <span id="soundIcon">🔊</span>
+                </button>
+
+                <!-- Project Viva Guide / Help Modal -->
+                <button id="btnVivaGuide" class="icon-btn" title="Open ADSA & DBMS Viva Guide">
+                    <span>📖</span>
+                </button>
+
+                <!-- Fullscreen Toggle -->
+                <button id="btnFullscreen" class="icon-btn" title="Toggle Fullscreen">
+                    <span>⛶</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ====================================================================
+             MAIN WORKSPACE (3-COLUMN INTERACTIVE RADAR)
+             ==================================================================== -->
+        <main class="main-workspace">
+
+            <!-- LEFT SIDEBAR: INCIDENT COMMAND CENTER -->
+            <aside class="sidebar-command">
+                <!-- Scenario Overview Metrics -->
+                <section class="sidebar-section">
+                    <div class="section-title">
+                        <span>Network Telemetry</span>
+                        <span id="scenarioCategoryBadge" class="badge">Supply Chain</span>
+                    </div>
+                    <div class="metrics-grid-2x2">
+                        <div class="metric-card">
+                            <div class="metric-label">Components</div>
+                            <div id="metricTotalNodes" class="metric-value cyan">25</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Dependencies</div>
+                            <div id="metricTotalEdges" class="metric-value amber">35</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Avg Resilience</div>
+                            <div id="metricAvgResilience" class="metric-value green">0.68</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Density</div>
+                            <div id="metricGraphDensity" class="metric-value">0.058</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Incident Epicenter Card -->
+                <section class="sidebar-section">
+                    <div class="section-title">
+                        <span>Incident Epicenter</span>
+                        <span id="epicenterStatusBadge" class="badge" style="color: #ef4444;">ACTIVE</span>
+                    </div>
+                    <div class="epicenter-selector-card">
+                        <div class="epicenter-header">
+                            <span style="font-size: 16px;">💥</span>
+                            <span class="epicenter-title">Trigger Source Node</span>
+                        </div>
+                        <div id="epicenterNodeName" class="epicenter-node-name">Wafer Foundry TSMC (Taiwan)</div>
+                        <div id="epicenterNodeCategory" class="epicenter-category-badge">Manufacturing</div>
+                        <p id="epicenterDescription" style="font-size: 11px; color: var(--text-secondary); margin-top: 6px;">
+                            Advanced 3nm/5nm logic wafer fabrication plant
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Simulation Parameters -->
+                <section class="sidebar-section">
+                    <div class="section-title">
+                        <span>Propagation Engine</span>
+                    </div>
+
+                    <!-- Severity Slider -->
+                    <div class="form-group">
+                        <div class="form-label-wrap">
+                            <label for="sliderSeverity" class="form-label">Incident Severity</label>
+                            <span id="valSeverity" class="form-val-display" style="color: #ef4444;">9.5 / 10</span>
+                        </div>
+                        <input type="range" id="sliderSeverity" class="range-slider" min="1.0" max="10.0" step="0.5" value="9.5">
+                    </div>
+
+                    <!-- Decay Factor Slider -->
+                    <div class="form-group">
+                        <div class="form-label-wrap">
+                            <label for="sliderDecay" class="form-label">Propagation Decay Factor</label>
+                            <span id="valDecay" class="form-val-display">0.85</span>
+                        </div>
+                        <input type="range" id="sliderDecay" class="range-slider" min="0.10" max="1.00" step="0.05" value="0.85">
+                    </div>
+
+                    <!-- Cutoff Threshold Slider -->
+                    <div class="form-group">
+                        <div class="form-label-wrap">
+                            <label for="sliderThreshold" class="form-label">Impact Cutoff Threshold</label>
+                            <span id="valThreshold" class="form-val-display">0.05</span>
+                        </div>
+                        <input type="range" id="sliderThreshold" class="range-slider" min="0.01" max="0.20" step="0.01" value="0.05">
+                    </div>
+
+                    <!-- Model Strategy (MAX_PATH vs SUM_PATH) -->
+                    <div class="form-group">
+                        <div class="form-label-wrap">
+                            <label class="form-label">Superposition Model</label>
+                        </div>
+                        <div class="toggle-group" id="modelTypeToggle">
+                            <div class="toggle-option active" data-model="MAX_PATH">Max-Path (Peak)</div>
+                            <div class="toggle-option" data-model="SUM_PATH">Sum-Path (Converging)</div>
+                        </div>
+                    </div>
+
+                    <!-- Wave Stepper & Playback Controls -->
+                    <div class="wave-playback-panel">
+                        <div class="form-label-wrap" style="margin-bottom: 8px;">
+                            <span class="form-label">Wavefront Stepper</span>
+                            <span id="currentWaveDisplay" class="form-val-display">Wave: All</span>
+                        </div>
+                        <div class="playback-controls-row">
+                            <button id="btnWavePrev" class="btn-ctrl" title="Step Previous Wave">⏮</button>
+                            <button id="btnWavePlay" class="btn-ctrl primary" title="Play Wave Animation">▶</button>
+                            <button id="btnWaveNext" class="btn-ctrl" title="Step Next Wave">⏭</button>
+                        </div>
+                        <div class="queue-hud-box" id="queueHud">
+                            Queue: [ TSMC (ID:104) ]
+                        </div>
+                    </div>
+                </section>
+
+                <!-- What-If Shielding Sandbox -->
+                <section class="sidebar-section">
+                    <div class="section-title">
+                        <span>What-If Shielding Sandbox</span>
+                        <span id="shieldedCountBadge" class="badge">0 Shielded</span>
+                    </div>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">
+                        Shielded components completely absorb cascading shockwaves and isolate downstream networks.
+                    </p>
+                    <button id="btnShieldSelected" class="btn-hud" style="width: 100%; justify-content: center; margin-bottom: 8px;">
+                        <span>🛡️</span> Shield Selected Node
+                    </button>
+                    <div id="shieldedNodesContainer">
+                        <div style="font-size: 11px; color: var(--text-muted); text-align: center; padding: 6px;">
+                            No nodes currently shielded.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Graph Structure Editor (Admin Mode) -->
+                <section class="sidebar-section" id="adminToolsSection">
+                    <div class="section-title">
+                        <span>Graph Topology Editor</span>
+                        <span class="badge" style="color: #34d399;">ADMIN ONLY</span>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button id="btnAddNodeModalBtn" class="btn-hud" style="flex: 1; justify-content: center;">
+                            <span>➕</span> Add Node
+                        </button>
+                        <button id="btnAddEdgeModalBtn" class="btn-hud" style="flex: 1; justify-content: center;">
+                            <span>🔗</span> Add Link
+                        </button>
+                    </div>
+                </section>
+            </aside>
+
+            <!-- CENTER: INTERACTIVE GRAPH CANVAS VIEWPORT -->
+            <section class="graph-viewport">
+                <!-- 2D Canvas -->
+                <canvas id="graphCanvas"></canvas>
+
+                <!-- Floating Canvas Controls -->
+                <div class="canvas-floating-controls">
+                    <button id="btnZoomIn" class="icon-btn" title="Zoom In"><span>➕</span></button>
+                    <button id="btnZoomOut" class="icon-btn" title="Zoom Out"><span>➖</span></button>
+                    <button id="btnFitScreen" class="icon-btn" title="Fit Entire Graph to Screen"><span>🎯</span></button>
+                    <button id="btnTogglePhysics" class="icon-btn" title="Toggle Force-Directed Physics Auto-Layout"><span>⚡</span></button>
+                </div>
+
+                <!-- Floating Live Telemetry HUD Banner -->
+                <div class="telemetry-floating-banner">
+                    <div class="telemetry-stat-item">
+                        <span class="telemetry-stat-label">Blast Radius</span>
+                        <span id="telemetryBlastRadius" class="telemetry-stat-value red">0.0%</span>
+                    </div>
+                    <div class="telemetry-stat-item">
+                        <span class="telemetry-stat-label">Impacted Nodes</span>
+                        <span id="telemetryImpactedCount" class="telemetry-stat-value amber">0 / 25</span>
+                    </div>
+                    <div class="telemetry-stat-item">
+                        <span class="telemetry-stat-label">Propagation Span</span>
+                        <span id="telemetryDuration" class="telemetry-stat-value cyan">0.0 hrs</span>
+                    </div>
+                    <div class="telemetry-stat-item">
+                        <span class="telemetry-stat-label">Mitigation Saved</span>
+                        <span id="telemetryMitigationPct" class="telemetry-stat-value green">0.0%</span>
+                    </div>
+                </div>
+
+                <!-- Floating Canvas Legend -->
+                <div class="canvas-legend-card">
+                    <div class="legend-title">Impact Intensity Scale</div>
+                    <div class="legend-gradient-bar"></div>
+                    <div class="legend-labels-row">
+                        <span>0% (Safe)</span>
+                        <span>50%</span>
+                        <span>100% (Critical)</span>
+                    </div>
+                    <div style="margin-top: 6px; display: flex; gap: 8px; color: var(--text-secondary);">
+                        <span>🛡️ Shielded</span>
+                        <span>⚠️ Bottleneck</span>
+                        <span>💥 Epicenter</span>
+                    </div>
+                </div>
+
+                <!-- Node Hover Tooltip -->
+                <div id="nodeHoverTooltip" class="node-hover-tooltip">
+                    <h4 id="tooltipNodeName">Wafer Foundry TSMC</h4>
+                    <div id="tooltipNodeCat" class="node-cat">Manufacturing</div>
+                    <div class="tooltip-grid">
+                        <span class="label">Impact Score:</span>
+                        <span id="tooltipImpact" class="val" style="color: #ef4444;">100%</span>
+                        <span class="label">Arrival Time:</span>
+                        <span id="tooltipArrival" class="val">0.0 hrs</span>
+                        <span class="label">Hop Distance:</span>
+                        <span id="tooltipHop" class="val">0</span>
+                        <span class="label">Resilience:</span>
+                        <span id="tooltipResilience" class="val">0.80</span>
+                        <span class="label">PageRank Rank:</span>
+                        <span id="tooltipPageRank" class="val">#1</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIGHT DRAWER: ALGORITHMS LAB & TELEMETRY -->
+            <aside class="drawer-telemetry">
+                <!-- Tab Headers -->
+                <nav class="drawer-tabs-header">
+                    <button class="drawer-tab-btn active" data-tab="tabTelemetry">Impact</button>
+                    <button class="drawer-tab-btn" data-tab="tabAlgoStudio">Algorithms</button>
+                    <button class="drawer-tab-btn" data-tab="tabBenchmark">Benchmarks</button>
+                    <button class="drawer-tab-btn" data-tab="tabDbmsSql">DBMS & SQL</button>
+                </nav>
+
+                <!-- TAB 1: IMPACT TELEMETRY -->
+                <div id="tabTelemetry" class="drawer-tab-content active">
+                    <div class="section-title">
+                        <span>Impacted Components Ranking</span>
+                        <span id="impactedCountTag" class="badge">0 Nodes</span>
+                    </div>
+                    <div id="impactedNodesList">
+                        <div style="font-size: 11px; color: var(--text-muted); text-align: center; padding: 24px;">
+                            Click <strong>"Trigger Cascade"</strong> to execute propagation analysis and rank vulnerable components.
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <button id="btnExportIncidentReport" class="btn-hud" style="width: 100%; justify-content: center;">
+                            <span>📄</span> View Incident Post-Mortem Report
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TAB 2: ALGORITHMS STUDIO -->
+                <div id="tabAlgoStudio" class="drawer-tab-content">
+                    <!-- Tarjan SCC -->
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-name">1. Tarjan's SCC (Cycles & Deadlocks)</span>
+                            <span class="algo-complexity-tag">O(V + E)</span>
+                        </div>
+                        <p class="algo-desc">Detects strongly connected components and circular dependency feedback loops.</p>
+                        <button id="btnRunTarjan" class="btn-algo-run">Execute Tarjan's SCC</button>
+                        <div id="outTarjan" class="algo-output-box" style="display:none;"></div>
+                    </div>
+
+                    <!-- Dijkstra Shortest Propagation Time -->
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-name">2. Dijkstra Time Propagation</span>
+                            <span class="algo-complexity-tag">O(E log V)</span>
+                        </div>
+                        <p class="algo-desc">Calculates earliest arrival times and critical latency propagation routes.</p>
+                        <button id="btnRunDijkstra" class="btn-algo-run">Compute Shortest Latencies</button>
+                        <div id="outDijkstra" class="algo-output-box" style="display:none;"></div>
+                    </div>
+
+                    <!-- Articulation Points and Bridges -->
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-name">3. Articulation Points & Bridges</span>
+                            <span class="algo-complexity-tag">O(V + E)</span>
+                        </div>
+                        <p class="algo-desc">Identifies single points of failure (SPF) whose breakdown disconnects the network.</p>
+                        <button id="btnRunArticulation" class="btn-algo-run">Find Cut-Vertices & Bridges</button>
+                        <div id="outArticulation" class="algo-output-box" style="display:none;"></div>
+                    </div>
+
+                    <!-- Kruskal MST Backbone -->
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-name">4. Kruskal's MST (DSU Backbone)</span>
+                            <span class="algo-complexity-tag">O(E log E)</span>
+                        </div>
+                        <p class="algo-desc">Extracts the minimum-weight communication spine using Disjoint Set Union.</p>
+                        <button id="btnRunKruskal" class="btn-algo-run">Extract MST Backbone</button>
+                        <div id="outKruskal" class="algo-output-box" style="display:none;"></div>
+                    </div>
+
+                    <!-- PageRank Centrality -->
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-name">5. PageRank Influence Centrality</span>
+                            <span class="algo-complexity-tag">O(k·(V + E))</span>
+                        </div>
+                        <p class="algo-desc">Calculates iterative structural importance score across directed links.</p>
+                        <button id="btnRunPageRank" class="btn-algo-run">Compute PageRank Ranking</button>
+                        <div id="outPageRank" class="algo-output-box" style="display:none;"></div>
+                    </div>
+
+                    <!-- Topological Sort -->
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-name">6. Kahn's Topological Sort</span>
+                            <span class="algo-complexity-tag">O(V + E)</span>
+                        </div>
+                        <p class="algo-desc">Calculates linear build/dependency resolution order, validating DAG integrity.</p>
+                        <button id="btnRunTopo" class="btn-algo-run">Run Topological Sort</button>
+                        <div id="outTopo" class="algo-output-box" style="display:none;"></div>
+                    </div>
+
+                    <!-- Monte Carlo Stochastic Simulation -->
+                    <div class="algo-card">
+                        <div class="algo-header">
+                            <span class="algo-name">7. Monte Carlo Probabilistic Cascade</span>
+                            <span class="algo-complexity-tag">500 Trials</span>
+                        </div>
+                        <p class="algo-desc">Runs stochastic trials with random edge failure probabilities to compute risk bounds.</p>
+                        <button id="btnRunMonteCarlo" class="btn-algo-run">Run 500 Stochastic Trials</button>
+                        <div id="outMonteCarlo" class="algo-output-box" style="display:none;"></div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: BENCHMARK LAB -->
+                <div id="tabBenchmark" class="drawer-tab-content">
+                    <div class="section-title">
+                        <span>ADSA Sorting Benchmarks</span>
+                        <span class="badge">N = 2,000 Elements</span>
+                    </div>
+                    <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 10px;">
+                        Compares handwritten ADSA sorting algorithms with real comparison counters and microsecond timers.
+                    </p>
+                    <button id="btnRunSortBenchmark" class="btn-algo-run" style="margin-bottom: 12px;">
+                        ⚡ Run Sorting Benchmark Suite
+                    </button>
+                    <div id="sortBenchmarkContainer">
+                        <table class="benchmark-table">
+                            <thead>
+                                <tr>
+                                    <th>Algorithm</th>
+                                    <th>Complexity</th>
+                                    <th>Time</th>
+                                    <th>Comparisons</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sortBenchmarkBody">
+                                <tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Click "Run Sorting Benchmark Suite" to evaluate.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="section-title" style="margin-top: 20px;">
+                        <span>Searching Benchmarks</span>
+                        <span class="badge">N = 100,000 Elements</span>
+                    </div>
+                    <button id="btnRunSearchBenchmark" class="btn-algo-run" style="margin-bottom: 12px;">
+                        🔍 Run Searching Benchmark Suite
+                    </button>
+                    <div id="searchBenchmarkContainer">
+                        <table class="benchmark-table">
+                            <thead>
+                                <tr>
+                                    <th>Search Method</th>
+                                    <th>Complexity</th>
+                                    <th>Time</th>
+                                    <th>Comparisons</th>
+                                </tr>
+                            </thead>
+                            <tbody id="searchBenchmarkBody">
+                                <tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Click "Run Searching Benchmark Suite" to evaluate.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TAB 4: DBMS & SQL CONSOLE -->
+                <div id="tabDbmsSql" class="drawer-tab-content">
+                    <div class="section-title">
+                        <span>Interactive SQL Console</span>
+                        <span class="badge">3NF Schema</span>
+                    </div>
+                    <textarea id="sqlQueryInput" class="sql-query-box" placeholder="Enter SQL query... (e.g. SELECT * FROM nodes WHERE resilience < 0.5)"></textarea>
+                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                        <button id="btnExecuteSql" class="btn-hud" style="flex: 1; justify-content: center; background: rgba(0, 242, 254, 0.15); color: var(--cyan);">
+                            ▶ Execute SQL
+                        </button>
+                    </div>
+
+                    <div class="section-title">
+                        <span>Preset Sample Queries</span>
+                    </div>
+                    <div id="sqlPresetsContainer" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px;"></div>
+
+                    <div class="section-title">
+                        <span>Query Output</span>
+                    </div>
+                    <div id="sqlOutputBox" class="algo-output-box" style="max-height: 140px; margin-bottom: 16px;">
+                        Execute a query or pick a preset above.
+                    </div>
+
+                    <div class="section-title">
+                        <span>Live Event Audit Trail</span>
+                        <span class="badge">Trigger Log</span>
+                    </div>
+                    <div id="auditLogList" style="max-height: 160px; overflow-y: auto;"></div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- ====================================================================
+         MODALS
+         ==================================================================== -->
+
+    <!-- Add Node Modal -->
+    <div id="modalAddNode" class="modal-backdrop">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3>Add Graph Component Node</h3>
+                <button class="modal-close-btn" data-close="modalAddNode">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Component Name</label>
+                    <input type="text" id="inputNodeName" class="range-slider" style="height: 32px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0 10px; color: #fff;" placeholder="e.g. Redis Cache Cluster">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <input type="text" id="inputNodeCategory" class="range-slider" style="height: 32px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0 10px; color: #fff;" placeholder="e.g. Cache Tier">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Resilience Score (0.0 to 1.0)</label>
+                    <input type="number" id="inputNodeResilience" min="0.0" max="1.0" step="0.05" value="0.60" class="range-slider" style="height: 32px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0 10px; color: #fff;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea id="inputNodeDesc" class="sql-query-box" style="height: 60px;" placeholder="Describe component function..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-hud" data-close="modalAddNode">Cancel</button>
+                <button id="btnSaveNewNode" class="btn-hud" style="background: var(--cyan); color: #050814; font-weight: 700;">Create Component</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Edge Modal -->
+    <div id="modalAddEdge" class="modal-backdrop">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3>Create Dependency Link (Directed Edge)</h3>
+                <button class="modal-close-btn" data-close="modalAddEdge">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Source Component (Origin of Influence)</label>
+                    <select id="selectEdgeSource" class="scenario-dropdown" style="width: 100%;"></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Target Component (Dependent)</label>
+                    <select id="selectEdgeTarget" class="scenario-dropdown" style="width: 100%;"></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Impact Weight Multiplier (0.1 to 1.0)</label>
+                    <input type="number" id="inputEdgeWeight" min="0.1" max="1.0" step="0.05" value="0.85" class="range-slider" style="height: 32px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0 10px; color: #fff;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Propagation Latency (Hours)</label>
+                    <input type="number" id="inputEdgeDelay" min="0.01" max="200" step="0.5" value="12.0" class="range-slider" style="height: 32px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0 10px; color: #fff;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Relationship Type</label>
+                    <input type="text" id="inputEdgeRelation" class="range-slider" style="height: 32px; background: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 0 10px; color: #fff;" value="DEPENDS_ON">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-hud" data-close="modalAddEdge">Cancel</button>
+                <button id="btnSaveNewEdge" class="btn-hud" style="background: var(--cyan); color: #050814; font-weight: 700;">Connect Dependency</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incident Post-Mortem Report Modal -->
+    <div id="modalIncidentReport" class="modal-backdrop">
+        <div class="modal-dialog" style="max-width: 680px;">
+            <div class="modal-header">
+                <h3>Incident Post-Mortem & Impact Assessment</h3>
+                <button class="modal-close-btn" data-close="modalIncidentReport">&times;</button>
+            </div>
+            <div class="modal-body" id="incidentReportContent" style="font-family: var(--font-body); font-size: 12px; line-height: 1.6;">
+                <!-- Generated dynamically by app.js -->
+            </div>
+            <div class="modal-footer">
+                <button id="btnPrintReport" class="btn-hud">🖨️ Print / Save PDF</button>
+                <button class="btn-hud" data-close="modalIncidentReport">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADSA & DBMS Viva Guide Modal -->
+    <div id="modalVivaGuide" class="modal-backdrop">
+        <div class="modal-dialog" style="max-width: 720px;">
+            <div class="modal-header">
+                <h3>ADSA & DBMS Academic Viva Guide</h3>
+                <button class="modal-close-btn" data-close="modalVivaGuide">&times;</button>
+            </div>
+            <div class="modal-body" style="font-size: 12px; line-height: 1.6; color: var(--text-secondary);">
+                <h4 style="color: var(--cyan); font-family: var(--font-heading); margin-bottom: 4px;">1. System Architecture & Core Concept</h4>
+                <p style="margin-bottom: 12px;">
+                    RippleMap models complex software and physical networks as directed graphs $G = (V, E)$, simulating how a single point failure ripples through dependent components. Forward edges define influence propagation ($u \to v$ means $u$ influences $v$).
+                </p>
+
+                <h4 style="color: var(--cyan); font-family: var(--font-heading); margin-bottom: 4px;">2. ADSA Graph Algorithms Implemented</h4>
+                <ul style="margin-left: 18px; margin-bottom: 12px;">
+                    <li><strong>Cascade Impact Propagation:</strong> Attenuated shockwave engine modeling shock dampening via component resilience.</li>
+                    <li><strong>BFS Concentric Waves:</strong> Level-by-level wave expansion using custom FIFO queues.</li>
+                    <li><strong>Dijkstra Shortest Propagation Time:</strong> $O(E \log V)$ priority queue finding earliest failure arrival times.</li>
+                    <li><strong>Tarjan's SCC & Cycles:</strong> $O(V + E)$ low-link discovery of cyclical deadlock clusters.</li>
+                    <li><strong>Articulation Points & Bridges:</strong> Identification of Single Points of Failure (SPF).</li>
+                    <li><strong>Kruskal's MST with DSU:</strong> Disjoint Set Union with path compression and union by rank.</li>
+                    <li><strong>Greedy Mitigation Advisor:</strong> Optimization algorithm identifying top-K shielding candidates to minimize blast radius.</li>
+                </ul>
+
+                <h4 style="color: var(--cyan); font-family: var(--font-heading); margin-bottom: 4px;">3. DBMS 3NF Relational Model</h4>
+                <p>
+                    Normalized schema with tables <code>scenarios</code>, <code>nodes</code>, <code>edges</code>, <code>events</code>, <code>simulation_runs</code>, <code>simulation_results</code>, <code>mitigation_plans</code>, and immutable <code>audit_log</code> populated by automatic database triggers.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-hud" data-close="modalVivaGuide">Close Guide</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/sound.js"></script>
+    <script src="js/algorithms.js"></script>
+    <script src="js/graph.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
