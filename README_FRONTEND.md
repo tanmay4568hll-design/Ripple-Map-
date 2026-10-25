@@ -1,11 +1,16 @@
 # 🌐 RippleMap — Interactive Dependency Radar & Cascade Failure Analysis Engine
 ## Advanced Data Structures & Algorithms (ADSA) and DBMS Major Course Project
 
+> **🔗 Live Production App**: **[https://ripple-map-1.onrender.com/](https://ripple-map-1.onrender.com/)**
+
 An interactive, high-performance web frontend built with **HTML5, Vanilla CSS3, and Modern Vanilla JavaScript (ES6+)**.
 
 ---
 
 ## 🚀 Quick Launch Instructions
+
+### Option 0: Live Web App (Zero Setup)
+Open **[https://ripple-map-1.onrender.com/](https://ripple-map-1.onrender.com/)** in any browser.
 
 ### Option 1: Double-Click Launcher
 Double-click [run_frontend.bat](file:///c:/Users/lenovo/Desktop/adsa%20project/run_frontend.bat) in the project root directory. It automatically opens the browser at `http://127.0.0.1:5173`.

@@ -1,13 +1,19 @@
 # 🌐 RippleMap — Dependency Radar & Cascade Failure Analysis Engine
 
 <p align="center">
+  <a href="https://ripple-map-1.onrender.com/"><img src="https://img.shields.io/badge/%F0%9F%9A%80%20Live%20Demo-ripple--map--1.onrender.com-00f2fe?style=for-the-badge&logo=render&logoColor=white" alt="Live Demo on Render"/></a>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Java-21%20LTS-007396?logo=openjdk&logoColor=white" alt="Java 21"/>
   <img src="https://img.shields.io/badge/Frontend-HTML5%20%7C%20CSS3%20%7C%20Vanilla%20JS-F7DF1E?logo=javascript&logoColor=black" alt="Web Frontend"/>
   <img src="https://img.shields.io/badge/Database-SQLite%203%20%2F%20MySQL%208-4479A1?logo=mysql&logoColor=white" alt="DBMS"/>
+  <img src="https://img.shields.io/badge/Deployment-Render.com-46E3B7?logo=render&logoColor=white" alt="Render"/>
   <img src="https://img.shields.io/badge/Algorithms-ADSA%20Graph%20Suite-00f2fe" alt="Algorithms"/>
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"/>
 </p>
 
+> **🔗 Live Deployment URL**: **[https://ripple-map-1.onrender.com/](https://ripple-map-1.onrender.com/)**  
 > **B.Tech Major Course Project for Advanced Data Structures & Algorithms (ADSA) and Database Management Systems (DBMS)**  
 > *RippleMap* is an interactive graph dependency modeling and cascade failure simulation system. It enables software architects and system engineers to model complex interdependent systems, simulate failure propagation shockwaves across directed dependencies, and evaluate algorithmic mitigation strategies.
 
@@ -150,17 +156,21 @@ RippleMap/
 
 ## ⚡ Quick Start Guide
 
-### Option A: Launch Web Application
+### Option A: Open Live Web Application (Zero Setup)
+Visit the live deployed application in any web browser:  
+👉 **[https://ripple-map-1.onrender.com/](https://ripple-map-1.onrender.com/)**
+
+### Option B: Run Locally on Your Machine
 Double-click **`run_frontend.bat`** in the root folder, or run:
 
 ```powershell
 python -m http.server 5173 --bind 127.0.0.1
 ```
-Open your browser at **`http://127.0.0.1:5173`**.
+Then visit **`http://127.0.0.1:5173`**.
 
 *(You can also directly double-click `index.html` to run in any browser with zero dependencies).*
 
-### Option B: Build & Run Java Backend Tests
+### Option C: Build & Run Java Backend Tests
 ```powershell
 mvn clean test
 ```
